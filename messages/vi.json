@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "pantry": "Tủ thực phẩm",
+    "recipes": "Công thức",
+    "signOut": "Đăng xuất"
+  },
+  "auth": {
+    "loginTitle": "Chào mừng trở lại",
+    "loginSubtitle": "Đăng nhập vào tài khoản Pantry Pilot của bạn",
+    "registerTitle": "Tạo tài khoản",
+    "registerSubtitle": "Bắt đầu quản lý tủ thực phẩm ngay hôm nay",
+    "emailLabel": "Email",
+    "passwordLabel": "Mật khẩu",
+    "nameLabel": "Họ và tên",
+    "confirmPasswordLabel": "Xác nhận mật khẩu",
+    "signIn": "Đăng nhập",
+    "signingIn": "Đang đăng nhập…",
+    "createAccount": "Tạo tài khoản",
+    "creatingAccount": "Đang tạo tài khoản…",
+    "noAccount": "Chưa có tài khoản?",
+    "createOne": "Tạo ngay",
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "signInLink": "Đăng nhập",
+    "forgotPassword": "Quên mật khẩu?",
+    "orContinueWith": "hoặc tiếp tục với",
+    "continueWithGoogle": "Tiếp tục với Google",
+    "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+    "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
+    "nameMinLength": "Tên phải có ít nhất 2 ký tự",
+    "confirmPasswordLabel2": "Xác nhận mật khẩu",
+    "passwordMismatch": "Mật khẩu không khớp"
+  },
+  "pantry": {
+    "title": "Tủ thực phẩm",
+    "subtitle": "Theo dõi nguyên liệu và nhận thông báo trước khi hết hạn.",
+    "addItem": "Thêm mặt hàng",
+    "empty": "Tủ thực phẩm của bạn đang trống. Thêm mặt hàng đầu tiên để bắt đầu.",
+    "loading": "Đang tải tủ thực phẩm…"
+  },
+  "recipes": {
+    "title": "Công thức nấu ăn",
+    "subtitle": "Công thức được tạo bởi AI từ nguyên liệu trong tủ của bạn.",
+    "generateRecipe": "Tạo công thức",
+    "generating": "Đang tạo…",
+    "empty": "Chưa có công thức nào được lưu. Hãy tạo công thức từ nguyên liệu trong tủ!",
+    "loading": "Đang tải công thức…"
+  },
+  "theme": {
+    "light": "Sáng",
+    "dark": "Tối",
+    "system": "Hệ thống"
+  }
+}
