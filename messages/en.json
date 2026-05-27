@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "pantry": "Pantry",
+    "recipes": "Recipes",
+    "signOut": "Sign out"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to your Pantry Pilot account",
+    "registerTitle": "Create an account",
+    "registerSubtitle": "Start managing your pantry today",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "nameLabel": "Full name",
+    "confirmPasswordLabel": "Confirm password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…",
+    "createAccount": "Create account",
+    "creatingAccount": "Creating account…",
+    "noAccount": "No account?",
+    "createOne": "Create one",
+    "alreadyHaveAccount": "Already have an account?",
+    "signInLink": "Sign in",
+    "forgotPassword": "Forgot password?",
+    "orContinueWith": "or continue with",
+    "continueWithGoogle": "Continue with Google",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "nameMinLength": "Name must be at least 2 characters",
+    "confirmPasswordLabel2": "Confirm password",
+    "passwordMismatch": "Passwords do not match"
+  },
+  "pantry": {
+    "title": "My Pantry",
+    "subtitle": "Track your ingredients and get alerts before they expire.",
+    "addItem": "Add Item",
+    "empty": "Your pantry is empty. Add your first item to get started.",
+    "loading": "Loading pantry…"
+  },
+  "recipes": {
+    "title": "Recipes",
+    "subtitle": "AI-generated recipes from your pantry ingredients.",
+    "generateRecipe": "Generate Recipe",
+    "generating": "Generating…",
+    "empty": "No saved recipes yet. Generate a recipe from your pantry ingredients!",
+    "loading": "Loading recipes…"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn run *)",
+      "Bash(yarn db:push)",
+      "Bash(yarn add *)"
+    ]
+  }
+}
