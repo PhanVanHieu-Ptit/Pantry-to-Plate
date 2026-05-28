@@ -1,14 +1,17 @@
-import type { PantryItem } from '@/lib/db/schema';
+import type { PantryItem as DrizzlePantryItem } from '@/lib/db/schema';
 
-export type PantryCategory =
-  | 'produce'
-  | 'dairy'
-  | 'meat'
-  | 'grains'
-  | 'condiments'
-  | 'beverages'
-  | 'frozen'
-  | 'other';
+import type { PANTRY_CATEGORIES } from './pantry.schemas';
+
+export type PantryCategory = (typeof PANTRY_CATEGORIES)[number];
+
+export type ExpiryStatus = 'expired' | 'critical' | 'warning' | 'ok';
+
+export type PantryItem = DrizzlePantryItem;
+
+export type PantryItemWithComputedFields = PantryItem & {
+  daysUntilExpiry: number | null;
+  expiryStatus: ExpiryStatus;
+};
 
 export interface PantryStore {
   searchQuery: string;
@@ -16,9 +19,3 @@ export interface PantryStore {
   setSearchQuery: (q: string) => void;
   setSelectedCategory: (c: PantryCategory | 'all') => void;
 }
-
-export type PantryItemWithExpiry = PantryItem & {
-  daysUntilExpiry: number | null;
-  isExpiringSoon: boolean;
-  isExpired: boolean;
-};
