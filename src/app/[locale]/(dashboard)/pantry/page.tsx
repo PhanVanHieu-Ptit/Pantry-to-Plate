@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { Plus, ScanLine } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { PantryList } from '@/features/pantry/components/pantry-list';
 import { AddItemSheet } from '@/features/pantry/components/add-item-sheet';
 import type { PantryItemWithComputedFields } from '@/features/pantry/types';
 
 export default function PantryPage() {
+  const t = useTranslations('pantry');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editItem, setEditItem] = useState<PantryItemWithComputedFields | undefined>(undefined);
 
@@ -31,20 +33,18 @@ export default function PantryPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Pantry</h1>
-          <p className="text-muted-foreground">
-            Track your ingredients and reduce food waste.
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+          <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => toast.info('Scan fridge coming soon!')}>
+          <Button variant="outline" size="sm" onClick={() => toast.info(t('scanComingSoon'))}>
             <ScanLine className="mr-2 h-4 w-4" />
-            Scan fridge
+            {t('scanFridge')}
           </Button>
           <Button size="sm" onClick={handleAddItem}>
             <Plus className="mr-2 h-4 w-4" />
-            Add item
+            {t('addItem')}
           </Button>
         </div>
       </div>

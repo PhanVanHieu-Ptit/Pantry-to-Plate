@@ -1,6 +1,7 @@
 'use client';
 
 import { Search } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,21 +26,6 @@ function LoadingSkeleton() {
   );
 }
 
-function EmptyState({ onAddItem }: { onAddItem: () => void }) {
-  return (
-    <div className="flex flex-col items-center py-24 text-center gap-4">
-      <span className="text-6xl select-none" role="img" aria-label="salad">
-        🥗
-      </span>
-      <h3 className="font-semibold text-lg">Your pantry is empty</h3>
-      <p className="text-muted-foreground text-sm max-w-xs">
-        Start adding ingredients to get personalised recipe suggestions.
-      </p>
-      <Button onClick={onAddItem}>Add first item</Button>
-    </div>
-  );
-}
-
 function ItemGrid({ items, onEdit }: { items: PantryItemWithComputedFields[]; onEdit: (item: PantryItemWithComputedFields) => void }) {
   return (
     <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
@@ -51,6 +37,7 @@ function ItemGrid({ items, onEdit }: { items: PantryItemWithComputedFields[]; on
 }
 
 export function PantryList({ onAddItem, onEdit }: PantryListProps) {
+  const t = useTranslations('pantry');
   const { searchQuery, setSearchQuery } = usePantryStore();
   const { items, isLoading } = usePantryItems();
 
@@ -81,7 +68,7 @@ export function PantryList({ onAddItem, onEdit }: PantryListProps) {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         <Input
           className="pl-9"
-          placeholder="Search pantry…"
+          placeholder={t('searchPlaceholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -90,7 +77,14 @@ export function PantryList({ onAddItem, onEdit }: PantryListProps) {
       {isLoading && <LoadingSkeleton />}
 
       {!isLoading && filtered.length === 0 && (
-        <EmptyState onAddItem={onAddItem} />
+        <div className="flex flex-col items-center py-24 text-center gap-4">
+          <span className="text-6xl select-none" role="img" aria-label="salad">
+            🥗
+          </span>
+          <h3 className="font-semibold text-lg">{t('emptyTitle')}</h3>
+          <p className="text-muted-foreground text-sm max-w-xs">{t('emptyDescription')}</p>
+          <Button onClick={onAddItem}>{t('addFirst')}</Button>
+        </div>
       )}
 
       {!isLoading && filtered.length > 0 && (
@@ -98,7 +92,7 @@ export function PantryList({ onAddItem, onEdit }: PantryListProps) {
           {useToday.length > 0 && (
             <section>
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-orange-600 dark:text-orange-400">
-                Use today
+                {t('useToday')}
               </h2>
               <ItemGrid items={useToday} onEdit={onEdit} />
             </section>
@@ -107,7 +101,7 @@ export function PantryList({ onAddItem, onEdit }: PantryListProps) {
           {Object.entries(byCategory).map(([category, catItems]) => (
             <section key={category}>
               <h2 className="mb-3 text-sm font-medium text-muted-foreground capitalize">
-                {category}
+                {t(`categories.${category}` as Parameters<typeof t>[0])}
               </h2>
               <ItemGrid items={catItems} onEdit={onEdit} />
             </section>
