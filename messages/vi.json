@@ -157,6 +157,20 @@
       "saved": "Đã lưu"
     }
   },
+  "vision": {
+    "modalTitle": "Quét tủ lạnh",
+    "takePhoto": "Chụp ảnh",
+    "uploadPhoto": "Tải ảnh lên",
+    "analyzing": "Đang phân tích tủ lạnh của bạn…",
+    "foundIngredients": "Tìm thấy {n} nguyên liệu",
+    "pleaseVerify": "Vui lòng kiểm tra",
+    "addItems": "Thêm {n} nguyên liệu vào tủ",
+    "addSuccess": "Đã thêm {n} nguyên liệu vào tủ!",
+    "addFailed": "Thêm nguyên liệu thất bại",
+    "detectionFailed": "Không thể nhận diện nguyên liệu. Vui lòng thử lại.",
+    "invalidFile": "Vui lòng tải lên ảnh JPG, PNG hoặc WebP dưới 10 MB.",
+    "noItemsSelected": "Vui lòng chọn ít nhất một nguyên liệu."
+  },
   "theme": {
     "light": "Sáng",
     "dark": "Tối",

@@ -2,16 +2,17 @@
 
 import { useState } from 'react';
 import { Plus, ScanLine } from 'lucide-react';
-import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { PantryList } from '@/features/pantry/components/pantry-list';
 import { AddItemSheet } from '@/features/pantry/components/add-item-sheet';
+import { FridgeScanModal } from '@/features/vision/components/FridgeScanModal';
 import type { PantryItemWithComputedFields } from '@/features/pantry/types';
 
 export default function PantryPage() {
   const t = useTranslations('pantry');
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
   const [editItem, setEditItem] = useState<PantryItemWithComputedFields | undefined>(undefined);
 
   function handleAddItem() {
@@ -38,7 +39,7 @@ export default function PantryPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => toast.info(t('scanComingSoon'))}>
+          <Button variant="outline" size="sm" onClick={() => setScanOpen(true)}>
             <ScanLine className="mr-2 h-4 w-4" />
             {t('scanFridge')}
           </Button>
@@ -56,6 +57,8 @@ export default function PantryPage() {
         onOpenChange={handleSheetOpenChange}
         item={editItem}
       />
+
+      <FridgeScanModal open={scanOpen} onOpenChange={setScanOpen} />
     </div>
   );
 }
