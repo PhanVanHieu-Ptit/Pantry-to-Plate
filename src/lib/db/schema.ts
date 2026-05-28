@@ -9,6 +9,8 @@ import {
   integer,
   boolean,
   jsonb,
+  index,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
 import { relations, sql } from 'drizzle-orm';
@@ -66,19 +68,30 @@ export const verifications = pgTable('verifications', {
   updatedAt: timestamp('updated_at', { withTimezone: true }),
 });
 
-export const pantryItems = pgTable('pantry_items', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
-  category: text('category').notNull(),
-  quantity: integer('quantity').notNull().default(1),
-  unit: text('unit').notNull(),
-  expirationDate: timestamp('expiration_date', { withTimezone: true }),
-  expiryAlertDays: integer('expiry_alert_days').default(3),
-  addedAt: timestamp('added_at', { withTimezone: true }).defaultNow().notNull(),
-});
+export const pantryItems = pgTable(
+  'pantry_items',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    category: text('category').notNull(),
+    quantity: integer('quantity').notNull().default(1),
+    unit: text('unit').notNull(),
+    expirationDate: timestamp('expiration_date', { withTimezone: true }),
+    expiryAlertDays: integer('expiry_alert_days').default(3),
+    addedAt: timestamp('added_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('pantry_items_user_id_idx').on(table.userId),
+    userIdExpirationIdx: index('pantry_items_user_id_expiration_idx').on(
+      table.userId,
+      table.expirationDate,
+    ),
+    userIdNameUnique: uniqueIndex('pantry_items_user_id_name_unique').on(table.userId, table.name),
+  }),
+);
 
 export const cookingSessions = pgTable('cooking_sessions', {
   id: uuid('id').defaultRandom().primaryKey(),

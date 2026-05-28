@@ -1,5 +1,5 @@
 import { createTRPCRouter, publicProcedure } from './server';
-import { pantryRouter } from '@/features/pantry/router';
+import { pantryRouter } from '@/features/pantry/pantry.router';
 import { recipesRouter } from '@/features/recipes/router';
 import { authRouter } from '@/features/auth/auth.router';
 
