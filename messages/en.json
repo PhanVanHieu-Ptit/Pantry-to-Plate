@@ -157,6 +157,20 @@
       "saved": "Saved"
     }
   },
+  "vision": {
+    "modalTitle": "Scan your fridge",
+    "takePhoto": "Take photo",
+    "uploadPhoto": "Upload photo",
+    "analyzing": "Analyzing your fridge…",
+    "foundIngredients": "Found {n} ingredients",
+    "pleaseVerify": "Please verify",
+    "addItems": "Add {n} items to pantry",
+    "addSuccess": "Added {n} items to pantry!",
+    "addFailed": "Failed to add items",
+    "detectionFailed": "Could not detect ingredients. Please try again.",
+    "invalidFile": "Please upload a JPG, PNG, or WebP image under 10 MB.",
+    "noItemsSelected": "Select at least one item to add."
+  },
   "theme": {
     "light": "Light",
     "dark": "Dark",
