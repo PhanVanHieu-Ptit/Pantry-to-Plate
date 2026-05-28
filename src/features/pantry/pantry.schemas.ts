@@ -17,7 +17,7 @@ export const PantryItemSchema = z.object({
   category: z.enum(PANTRY_CATEGORIES),
   quantity: z.number().positive(),
   unit: z.string().min(1).max(50),
-  expirationDate: z.date().optional(),
+  expirationDate: z.coerce.date().optional(),
 });
 
 export const AddPantryItemInput = PantryItemSchema;

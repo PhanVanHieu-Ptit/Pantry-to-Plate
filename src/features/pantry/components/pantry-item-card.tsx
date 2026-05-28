@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -43,37 +44,38 @@ const EXPIRY_COLORS = {
   ok: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
 };
 
-function expiryLabel(item: PantryItemWithComputedFields): string {
-  if (!item.expirationDate) return '';
-  if (item.expiryStatus === 'expired') return 'Expired';
-  if (item.daysUntilExpiry === 0) return 'Expires today';
-  if (item.daysUntilExpiry === 1) return 'Expires tomorrow';
-  if (item.daysUntilExpiry !== null && item.daysUntilExpiry <= 7)
-    return `Expires in ${item.daysUntilExpiry}d`;
-  return `Expires ${new Date(item.expirationDate).toLocaleDateString()}`;
-}
-
 interface PantryItemCardProps {
   item: PantryItemWithComputedFields;
   onEdit: (item: PantryItemWithComputedFields) => void;
 }
 
 export function PantryItemCard({ item, onEdit }: PantryItemCardProps) {
+  const t = useTranslations('pantry');
   const [confirmOpen, setConfirmOpen] = useState(false);
   const deleteItem = useDeleteItem();
+
+  function expiryLabel(): string {
+    if (!item.expirationDate) return '';
+    if (item.expiryStatus === 'expired') return t('expiry.expired');
+    if (item.daysUntilExpiry === 0) return t('expiry.today');
+    if (item.daysUntilExpiry === 1) return t('expiry.tomorrow');
+    if (item.daysUntilExpiry !== null && item.daysUntilExpiry <= 7)
+      return t('expiry.inDays', { n: item.daysUntilExpiry });
+    return t('expiry.on', { date: new Date(item.expirationDate).toLocaleDateString() });
+  }
 
   function handleDelete() {
     deleteItem.mutate(
       { id: item.id },
       {
-        onSuccess: () => toast.success(`${item.name} removed`),
-        onError: () => toast.error('Failed to delete item'),
+        onSuccess: () => toast.success(t('itemRemoved', { name: item.name })),
+        onError: () => toast.error(t('itemDeleteFailed')),
       },
     );
     setConfirmOpen(false);
   }
 
-  const expiry = expiryLabel(item);
+  const expiry = expiryLabel();
 
   return (
     <>
@@ -89,13 +91,13 @@ export function PantryItemCard({ item, onEdit }: PantryItemCardProps) {
                   className="h-7 w-7 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">Open menu</span>
+                  <span className="sr-only">{t('openMenu')}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => onEdit(item)}>
                   <Pencil className="mr-2 h-4 w-4" />
-                  Edit
+                  {t('edit')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -103,7 +105,7 @@ export function PantryItemCard({ item, onEdit }: PantryItemCardProps) {
                   onClick={() => setConfirmOpen(true)}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Delete
+                  {t('delete')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -116,9 +118,9 @@ export function PantryItemCard({ item, onEdit }: PantryItemCardProps) {
           <div className="mt-3 flex flex-wrap gap-1.5">
             <Badge
               variant="outline"
-              className={`border-0 text-xs capitalize ${CATEGORY_COLORS[item.category as PantryCategory]}`}
+              className={`border-0 text-xs ${CATEGORY_COLORS[item.category as PantryCategory]}`}
             >
-              {item.category}
+              {t(`categories.${item.category}` as Parameters<typeof t>[0])}
             </Badge>
 
             {expiry && (
@@ -136,17 +138,17 @@ export function PantryItemCard({ item, onEdit }: PantryItemCardProps) {
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>Delete item?</DialogTitle>
+            <DialogTitle>{t('deleteTitle')}</DialogTitle>
             <DialogDescription>
-              This will remove <strong>{item.name}</strong> from your pantry.
+              {t('deleteDescription', { name: item.name })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setConfirmOpen(false)}>
-              Cancel
+              {t('cancel')}
             </Button>
             <Button variant="destructive" onClick={handleDelete}>
-              Delete
+              {t('deleteConfirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

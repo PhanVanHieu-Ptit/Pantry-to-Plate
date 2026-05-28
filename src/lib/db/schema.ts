@@ -11,6 +11,7 @@ import {
   jsonb,
   index,
   uniqueIndex,
+  primaryKey,
 } from 'drizzle-orm/pg-core';
 
 import { relations, sql } from 'drizzle-orm';
@@ -115,7 +116,30 @@ export const savedRecipes = pgTable('saved_recipes', {
   steps: jsonb('steps').notNull(),
   nutrition: jsonb('nutrition'),
   savedAt: timestamp('saved_at', { withTimezone: true }).defaultNow().notNull(),
+  description: text('description'),
+  difficulty: text('difficulty').default('medium'),
+  prepTime: integer('prep_time'),
+  cookTime: integer('cook_time'),
+  servings: integer('servings'),
+  tags: text('tags').array().default(sql`ARRAY[]::text[]`),
+  source: text('source').default('manual'),
+  expiryItemsUsed: text('expiry_items_used').array().default(sql`ARRAY[]::text[]`),
+  missingIngredients: text('missing_ingredients').array().default(sql`ARRAY[]::text[]`),
 });
+
+export const aiUsageCounters = pgTable(
+  'ai_usage_counters',
+  {
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    date: text('date').notNull(),
+    count: integer('count').notNull().default(0),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.userId, table.date] }),
+  }),
+);
 
 export const userPreferences = pgTable('user_preferences', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -135,6 +159,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   pantryItems: many(pantryItems),
   cookingSessions: many(cookingSessions),
   savedRecipes: many(savedRecipes),
+  aiUsageCounters: many(aiUsageCounters),
   preferences: one(userPreferences, {
     fields: [users.id],
     references: [userPreferences.userId],
@@ -169,6 +194,13 @@ export const userPreferencesRelations = relations(userPreferences, ({ one }) => 
   }),
 }));
 
+export const aiUsageCountersRelations = relations(aiUsageCounters, ({ one }) => ({
+  user: one(users, {
+    fields: [aiUsageCounters.userId],
+    references: [users.id],
+  }),
+}));
+
 // ── Inferred Types ────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -184,3 +216,5 @@ export type NewUserPreferences = typeof userPreferences.$inferInsert;
 export type Session = typeof sessions.$inferSelect;
 export type Account = typeof accounts.$inferSelect;
 export type Verification = typeof verifications.$inferSelect;
+export type AiUsageCounter = typeof aiUsageCounters.$inferSelect;
+export type NewAiUsageCounter = typeof aiUsageCounters.$inferInsert;

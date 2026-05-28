@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -29,15 +30,13 @@ import type { PantryItemWithComputedFields } from '../types';
 
 const UNITS = ['g', 'kg', 'ml', 'L', 'pcs', 'tbsp', 'tsp'] as const;
 
-const formSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100),
-  category: z.enum(PANTRY_CATEGORIES, { required_error: 'Category is required' }),
-  quantity: z.coerce.number({ invalid_type_error: 'Must be a number' }).positive('Must be positive'),
-  unit: z.string().min(1, 'Unit is required'),
-  expirationDate: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = {
+  name: string;
+  category: (typeof PANTRY_CATEGORIES)[number];
+  quantity: number;
+  unit: string;
+  expirationDate?: string;
+};
 
 interface AddItemSheetProps {
   open: boolean;
@@ -46,9 +45,24 @@ interface AddItemSheetProps {
 }
 
 export function AddItemSheet({ open, onOpenChange, item }: AddItemSheetProps) {
+  const t = useTranslations('pantry');
   const isEdit = !!item;
   const addItem = useAddItem();
   const updateItem = useUpdateItem();
+
+  const formSchema = useMemo(
+    () =>
+      z.object({
+        name: z.string().min(1, t('validation.nameRequired')).max(100),
+        category: z.enum(PANTRY_CATEGORIES, { required_error: t('validation.categoryRequired') }),
+        quantity: z.coerce
+          .number({ invalid_type_error: t('validation.mustBeNumber') })
+          .positive(t('validation.mustBePositive')),
+        unit: z.string().min(1, t('validation.unitRequired')),
+        expirationDate: z.string().optional(),
+      }),
+    [t],
+  );
 
   const {
     register,
@@ -97,19 +111,19 @@ export function AddItemSheet({ open, onOpenChange, item }: AddItemSheetProps) {
         { id: item.id, ...payload },
         {
           onSuccess: () => {
-            toast.success('Item updated');
+            toast.success(t('itemUpdated'));
             onOpenChange(false);
           },
-          onError: () => toast.error('Failed to update item'),
+          onError: () => toast.error(t('itemUpdateFailed')),
         },
       );
     } else {
       addItem.mutate(payload, {
         onSuccess: () => {
-          toast.success('Item added');
+          toast.success(t('itemAdded'));
           reset({ quantity: 1, unit: 'pcs', name: '', expirationDate: '' });
         },
-        onError: () => toast.error('Failed to add item'),
+        onError: () => toast.error(t('itemAddFailed')),
       });
     }
   }
@@ -120,34 +134,34 @@ export function AddItemSheet({ open, onOpenChange, item }: AddItemSheetProps) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="flex flex-col overflow-y-auto sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>{isEdit ? 'Edit item' : 'Add item'}</SheetTitle>
+          <SheetTitle>{isEdit ? t('form.editTitle') : t('form.addTitle')}</SheetTitle>
           <SheetDescription>
-            {isEdit ? 'Update the details for this pantry item.' : 'Add a new item to your pantry.'}
+            {isEdit ? t('form.editDescription') : t('form.addDescription')}
           </SheetDescription>
         </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 py-4 flex-1">
           {/* Name */}
           <div className="grid gap-1.5">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" placeholder="e.g. Chicken breast" {...register('name')} />
+            <Label htmlFor="name">{t('form.nameLabel')}</Label>
+            <Input id="name" placeholder={t('form.namePlaceholder')} {...register('name')} />
             {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
           </div>
 
           {/* Category */}
           <div className="grid gap-1.5">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category">{t('form.categoryLabel')}</Label>
             <Select
               value={categoryValue}
               onValueChange={(val) => setValue('category', val as (typeof PANTRY_CATEGORIES)[number], { shouldValidate: true })}
             >
               <SelectTrigger id="category">
-                <SelectValue placeholder="Select category" />
+                <SelectValue placeholder={t('form.categoryPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
                 {PANTRY_CATEGORIES.map((cat) => (
-                  <SelectItem key={cat} value={cat} className="capitalize">
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  <SelectItem key={cat} value={cat}>
+                    {t(`categories.${cat}` as Parameters<typeof t>[0])}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -160,7 +174,7 @@ export function AddItemSheet({ open, onOpenChange, item }: AddItemSheetProps) {
           {/* Quantity + Unit */}
           <div className="grid grid-cols-2 gap-3">
             <div className="grid gap-1.5">
-              <Label htmlFor="quantity">Quantity</Label>
+              <Label htmlFor="quantity">{t('form.quantityLabel')}</Label>
               <Input
                 id="quantity"
                 type="number"
@@ -175,13 +189,13 @@ export function AddItemSheet({ open, onOpenChange, item }: AddItemSheetProps) {
             </div>
 
             <div className="grid gap-1.5">
-              <Label htmlFor="unit">Unit</Label>
+              <Label htmlFor="unit">{t('form.unitLabel')}</Label>
               <Select
                 value={unitValue}
                 onValueChange={(val) => setValue('unit', val, { shouldValidate: true })}
               >
                 <SelectTrigger id="unit">
-                  <SelectValue placeholder="Unit" />
+                  <SelectValue placeholder={t('form.unitPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {UNITS.map((u) => (
@@ -197,16 +211,16 @@ export function AddItemSheet({ open, onOpenChange, item }: AddItemSheetProps) {
 
           {/* Expiration Date */}
           <div className="grid gap-1.5">
-            <Label htmlFor="expirationDate">Expiration date (optional)</Label>
+            <Label htmlFor="expirationDate">{t('form.expirationLabel')}</Label>
             <Input id="expirationDate" type="date" {...register('expirationDate')} />
           </div>
 
           <SheetFooter className="mt-auto pt-4 gap-2 flex-col sm:flex-row">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {isEdit ? 'Cancel' : 'Done'}
+              {isEdit ? t('cancel') : t('form.done')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Saving…' : isEdit ? 'Save changes' : 'Add another'}
+              {isPending ? t('form.saving') : isEdit ? t('form.saveChanges') : t('form.addAnother')}
             </Button>
           </SheetFooter>
         </form>
