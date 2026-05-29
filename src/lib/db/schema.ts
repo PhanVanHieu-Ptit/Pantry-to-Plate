@@ -102,6 +102,7 @@ export const cookingSessions = pgTable('cooking_sessions', {
   recipeName: text('recipe_name').notNull(),
   recipeData: jsonb('recipe_data').notNull(),
   rating: integer('rating'),
+  notes: text('notes'),
   completed: boolean('completed').notNull().default(false),
   cookedAt: timestamp('cooked_at', { withTimezone: true }).defaultNow().notNull(),
 });

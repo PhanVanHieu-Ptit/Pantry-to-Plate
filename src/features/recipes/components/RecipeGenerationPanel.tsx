@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { AlertCircle, Loader2, RefreshCw, Sparkles } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import type { DeepPartial } from 'ai';
 import { useTranslations } from 'next-intl';
@@ -59,8 +60,28 @@ function SkeletonCard() {
 
 export function RecipeGenerationPanel() {
   const t = useTranslations('recipes');
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) ?? 'vi';
   const { data: pantryItems = [], isLoading: loadingPantry } = trpc.pantry.getItems.useQuery();
   const utils = trpc.useUtils();
+  const [cookingRecipeId, setCookingRecipeId] = useState<string | null>(null);
+
+  const startSession = trpc.recipes.startCookingSession.useMutation({
+    onSuccess: ({ sessionId }) => {
+      router.push(`/${locale}/cook/${sessionId}`);
+    },
+    onError: () => {
+      toast.error('Không thể bắt đầu nấu ăn. Vui lòng thử lại.');
+      setCookingRecipeId(null);
+    },
+  });
+
+  function handleCook(recipe: GeneratedRecipe) {
+    setCookingRecipeId(recipe.id ?? null);
+    startSession.mutate({ recipeData: recipe as unknown as Record<string, unknown> });
+  }
+
   const saveRecipeMutation = trpc.recipes.saveRecipe.useMutation({
     onSuccess: () => {
       toast.success(t('saveSuccess'));
@@ -286,7 +307,7 @@ export function RecipeGenerationPanel() {
                     isSaved={!!recipe.id && savedRecipeIds.has(recipe.id)}
                     onSave={() => handleSave(recipe)}
                     onDetails={() => complete && setDetailRecipe(recipe as GeneratedRecipe)}
-                    onCook={() => complete && setDetailRecipe(recipe as GeneratedRecipe)}
+                    onCook={() => complete && handleCook(recipe as GeneratedRecipe)}
                   />
                 );
               })}

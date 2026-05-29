@@ -1,8 +1,10 @@
 'use client';
 
-import { Check, ChefHat, Clock, ShoppingCart, Timer, Users } from 'lucide-react';
-import { toast } from 'sonner';
+import { Check, ChefHat, Clock, Loader2, ShoppingCart, Timer, Users } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,6 +16,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { trpc } from '@/lib/trpc/client';
 import type { GeneratedRecipe } from '@/lib/ai/recipe-generator';
 
 interface RecipeDetailSheetProps {
@@ -38,6 +41,27 @@ export function RecipeDetailSheet({
   onSave,
 }: RecipeDetailSheetProps) {
   const t = useTranslations('recipes');
+  const tCooking = useTranslations('cooking');
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) ?? 'vi';
+  const [startingCook, setStartingCook] = useState(false);
+
+  const startSession = trpc.recipes.startCookingSession.useMutation({
+    onSuccess: ({ sessionId }) => {
+      router.push(`/${locale}/cook/${sessionId}`);
+    },
+    onError: () => {
+      toast.error('Không thể bắt đầu nấu ăn. Vui lòng thử lại.');
+      setStartingCook(false);
+    },
+  });
+
+  const handleStartCooking = () => {
+    if (!recipe) return;
+    setStartingCook(true);
+    startSession.mutate({ recipeData: recipe as unknown as Record<string, unknown> });
+  };
 
   if (!recipe) return null;
 
@@ -188,10 +212,15 @@ export function RecipeDetailSheet({
         <SheetFooter className="shrink-0 pt-2 gap-2 flex-col sm:flex-row">
           <Button
             className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
-            onClick={() => toast.info(t('cookingModeWip'))}
+            onClick={handleStartCooking}
+            disabled={startingCook}
           >
-            <ChefHat className="h-4 w-4 mr-2" />
-            {t('startCooking')}
+            {startingCook ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <ChefHat className="h-4 w-4 mr-2" />
+            )}
+            {startingCook ? tCooking('starting') : t('startCooking')}
           </Button>
           {!isSaved && onSave && (
             <Button variant="outline" onClick={onSave} className="flex-1">
