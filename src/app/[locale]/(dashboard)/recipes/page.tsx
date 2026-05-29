@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
@@ -41,6 +42,9 @@ function savedRecipeToGeneratedShape(r: SavedRecipe): GeneratedRecipe {
 
 function SavedRecipesGrid() {
   const t = useTranslations('recipes');
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) ?? 'vi';
   const utils = trpc.useUtils();
   const { data, isLoading } = trpc.recipes.getSavedRecipes.useQuery({ limit: 12 });
   const deleteMutation = trpc.recipes.deleteRecipe.useMutation({
@@ -48,6 +52,11 @@ function SavedRecipesGrid() {
       toast.success(t('deleteSuccess'));
       void utils.recipes.getSavedRecipes.invalidate();
     },
+  });
+
+  const startSession = trpc.recipes.startCookingSession.useMutation({
+    onSuccess: ({ sessionId }) => router.push(`/${locale}/cook/${sessionId}`),
+    onError: () => toast.error('Không thể bắt đầu nấu ăn. Vui lòng thử lại.'),
   });
 
   const [detailRecipe, setDetailRecipe] = useState<GeneratedRecipe | null>(null);
@@ -91,7 +100,7 @@ function SavedRecipesGrid() {
               isComplete
               isSaved
               onDetails={() => setDetailRecipe(recipe)}
-              onCook={() => setDetailRecipe(recipe)}
+              onCook={() => startSession.mutate({ recipeData: recipe as unknown as Record<string, unknown> })}
             />
           );
         })}

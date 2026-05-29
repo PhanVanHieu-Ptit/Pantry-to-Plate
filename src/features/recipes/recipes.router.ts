@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, lt, sql } from 'drizzle-orm';
+import { and, eq, lte, lt, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { aiUsageCounters, cookingSessions, pantryItems, savedRecipes, userPreferences } from '@/lib/db/schema';
@@ -215,6 +215,86 @@ export const recipesRouter = createTRPCRouter({
       if (!deleted) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Không tìm thấy công thức' });
       }
+      return { success: true };
+    }),
+
+  startCookingSession: protectedProcedure
+    .input(z.object({ recipeData: z.record(z.unknown()) }))
+    .mutation(async ({ ctx, input }) => {
+      const recipeName = (input.recipeData.name as string) ?? 'Không tên';
+      const [session] = await ctx.db
+        .insert(cookingSessions)
+        .values({
+          userId: ctx.session.user.id,
+          recipeName,
+          recipeData: input.recipeData,
+          completed: false,
+        })
+        .returning();
+      return { sessionId: session!.id };
+    }),
+
+  getCookingSession: protectedProcedure
+    .input(z.object({ sessionId: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      const [session] = await ctx.db
+        .select()
+        .from(cookingSessions)
+        .where(
+          and(
+            eq(cookingSessions.id, input.sessionId),
+            eq(cookingSessions.userId, ctx.session.user.id),
+          ),
+        )
+        .limit(1);
+
+      if (!session) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Không tìm thấy phiên nấu ăn' });
+      }
+      return session;
+    }),
+
+  completeCookingSession: protectedProcedure
+    .input(
+      z.object({
+        sessionId: z.string().uuid(),
+        rating: z.number().int().min(1).max(5),
+        notes: z.string().optional(),
+        deductItems: z.array(
+          z.object({ id: z.string().uuid(), quantityUsed: z.number().int().min(1) }),
+        ),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      await ctx.db.transaction(async (tx) => {
+        await tx
+          .update(cookingSessions)
+          .set({ completed: true, rating: input.rating, notes: input.notes, cookedAt: new Date() })
+          .where(
+            and(eq(cookingSessions.id, input.sessionId), eq(cookingSessions.userId, userId)),
+          );
+
+        for (const item of input.deductItems) {
+          await tx
+            .update(pantryItems)
+            .set({ quantity: sql`${pantryItems.quantity} - ${item.quantityUsed}` })
+            .where(and(eq(pantryItems.id, item.id), eq(pantryItems.userId, userId)));
+        }
+
+        if (input.deductItems.length > 0) {
+          await tx
+            .delete(pantryItems)
+            .where(
+              and(
+                eq(pantryItems.userId, userId),
+                lte(pantryItems.quantity, 0),
+              ),
+            );
+        }
+      });
+
       return { success: true };
     }),
 });
