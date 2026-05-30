@@ -17,6 +17,11 @@ const config: Config = {
     },
     extend: {
       colors: {
+        'brand-green':       '#2D6A4F',
+        'brand-green-light': '#52B788',
+        'brand-orange':      '#E76F51',
+        'brand-cream':       '#FAFAF7',
+        'brand-warm':        '#F4A261',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -58,8 +63,13 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
+        lora: ['var(--font-lora)', ...fontFamily.serif],
       },
       keyframes: {
+        'float-up': {
+          '0%, 100%': { transform: 'translateY(0px) rotate(0deg)', opacity: '0.06' },
+          '50%':      { transform: 'translateY(-28px) rotate(12deg)', opacity: '0.10' },
+        },
         'accordion-down': {
           from: { height: '0' },
           to: { height: 'var(--radix-accordion-content-height)' },
@@ -70,8 +80,9 @@ const config: Config = {
         },
       },
       animation: {
+        'float-up':      'float-up 7s ease-in-out infinite',
         'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
+        'accordion-up':   'accordion-up 0.2s ease-out',
       },
     },
   },

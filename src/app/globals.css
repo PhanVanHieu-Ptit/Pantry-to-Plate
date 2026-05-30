@@ -56,4 +56,16 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .delay-500  { animation-delay: 0.5s; }
+  .delay-1000 { animation-delay: 1s; }
+  .delay-2000 { animation-delay: 2s; }
+  .delay-3000 { animation-delay: 3s; }
+  .delay-4000 { animation-delay: 4s; }
+  .delay-5000 { animation-delay: 5s; }
 }

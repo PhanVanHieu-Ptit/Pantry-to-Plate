@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
@@ -49,7 +49,7 @@ interface PantryItemCardProps {
   onEdit: (item: PantryItemWithComputedFields) => void;
 }
 
-export function PantryItemCard({ item, onEdit }: PantryItemCardProps) {
+export const PantryItemCard = memo(function PantryItemCard({ item, onEdit }: PantryItemCardProps) {
   const t = useTranslations('pantry');
   const [confirmOpen, setConfirmOpen] = useState(false);
   const deleteItem = useDeleteItem();
@@ -155,4 +155,4 @@ export function PantryItemCard({ item, onEdit }: PantryItemCardProps) {
       </Dialog>
     </>
   );
-}
+});

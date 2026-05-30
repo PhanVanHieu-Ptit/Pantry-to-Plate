@@ -2,8 +2,9 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { trpc } from '@/lib/trpc/client';
+import { initAnalytics } from '@/lib/analytics';
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') return '';
@@ -30,6 +31,10 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
       ],
     }),
   );
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>

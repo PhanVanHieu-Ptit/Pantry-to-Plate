@@ -1,8 +1,28 @@
 {
   "nav": {
+    "home": "Trang chủ",
     "pantry": "Tủ thực phẩm",
     "recipes": "Công thức",
     "signOut": "Đăng xuất"
+  },
+  "dashboard": {
+    "goodMorning": "Chào buổi sáng, {name} 👋",
+    "goodAfternoon": "Chào buổi chiều, {name} 👋",
+    "goodEvening": "Chào buổi tối, {name} 👋",
+    "urgencyBanner": "{item} sắp hết hạn — hãy nấu ngay hôm nay!",
+    "cookNow": "Nấu ngay →",
+    "pantryLabel": "Tủ thực phẩm",
+    "pantryItems": "{count} món",
+    "streakLabel": "Chuỗi nấu",
+    "dayStreak": "ngày liên tiếp",
+    "wasteScore": "Tiết kiệm",
+    "cookTonightTitle": "Nấu tối nay",
+    "generateCTA": "Tạo công thức →",
+    "generateCTASubtext": "Chưa có công thức mới hôm nay",
+    "cookNowBtn": "Nấu ngay",
+    "recentlyCooked": "Đã nấu gần đây",
+    "noRecentSessions": "Chưa có buổi nấu nào. Hãy bắt đầu nấu để xây dựng chuỗi!",
+    "scanFridge": "Quét tủ lạnh"
   },
   "auth": {
     "loginTitle": "Chào mừng trở lại",
@@ -155,6 +175,12 @@
     "tabs": {
       "generate": "Tạo công thức",
       "saved": "Đã lưu"
+    },
+    "rateLimitModal": {
+      "title": "Đã đạt giới hạn hôm nay",
+      "description": "Bạn đã dùng hết 10 lượt tạo công thức miễn phí hôm nay. Nâng cấp Pro để tạo không giới hạn.",
+      "upgradeCTA": "Nâng cấp Pro",
+      "dismiss": "Để sau"
     }
   },
   "vision": {
@@ -208,5 +234,12 @@
     "light": "Sáng",
     "dark": "Tối",
     "system": "Hệ thống"
+  },
+  "errors": {
+    "somethingWentWrong": "Đã xảy ra lỗi",
+    "tryAgain": "Thử lại",
+    "reportIssue": "Báo cáo lỗi",
+    "offline": "Bạn đang ngoại tuyến",
+    "offlineDescription": "Một số tính năng có thể không khả dụng"
   }
 }

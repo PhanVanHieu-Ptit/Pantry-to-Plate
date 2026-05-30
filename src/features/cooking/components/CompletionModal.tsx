@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { track } from '@/lib/analytics';
 import type { GeneratedRecipe } from '@/lib/ai/recipe-generator';
 
 interface PantryItem {
@@ -93,6 +94,7 @@ export function CompletionModal({
     const deductItems: DeductItem[] = matchedPantryItems
       .filter((p) => checked.has(p.id))
       .map((p) => ({ id: p.id, quantityUsed: 1 }));
+    track('cooking_session_completed', { rating, deductedItems: deductItems.length });
     onComplete(rating, notes, deductItems);
   };
 

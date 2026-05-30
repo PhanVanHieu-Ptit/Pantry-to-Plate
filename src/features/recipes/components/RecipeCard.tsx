@@ -1,5 +1,7 @@
 'use client';
 
+import { memo } from 'react';
+import Image from 'next/image';
 import {
   ChefHat,
   Clock,
@@ -22,6 +24,8 @@ interface RecipeCardProps {
   recipe: DeepPartial<GeneratedRecipe>;
   isComplete?: boolean;
   isSaved?: boolean;
+  imageUrl?: string;
+  priority?: boolean;
   onSave?: () => void;
   onDetails?: () => void;
   onCook?: () => void;
@@ -34,10 +38,12 @@ const NUTRITION_BARS = [
   { key: 'fat' as const, label: 'F', max: 60, color: 'bg-yellow-400' },
 ];
 
-export function RecipeCard({
+export const RecipeCard = memo(function RecipeCard({
   recipe,
   isComplete = false,
   isSaved = false,
+  imageUrl,
+  priority = false,
   onSave,
   onDetails,
   onCook,
@@ -86,6 +92,22 @@ export function RecipeCard({
           {t('expiryUsed')}
         </div>
       )}
+
+      {/* Thumbnail — image if provided, gradient otherwise */}
+      {imageUrl ? (
+        <div className="relative h-40 w-full shrink-0">
+          <Image
+            src={imageUrl}
+            alt={recipe.name ?? 'Recipe thumbnail'}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
+            priority={priority}
+            placeholder="blur"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+          />
+        </div>
+      ) : null}
 
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
@@ -204,4 +226,4 @@ export function RecipeCard({
       </CardFooter>
     </Card>
   );
-}
+});

@@ -1,8 +1,28 @@
 {
   "nav": {
+    "home": "Home",
     "pantry": "Pantry",
     "recipes": "Recipes",
     "signOut": "Sign out"
+  },
+  "dashboard": {
+    "goodMorning": "Good morning, {name} 👋",
+    "goodAfternoon": "Good afternoon, {name} 👋",
+    "goodEvening": "Good evening, {name} 👋",
+    "urgencyBanner": "{item} expires tomorrow — cook it today!",
+    "cookNow": "Cook now →",
+    "pantryLabel": "Pantry",
+    "pantryItems": "{count} items",
+    "streakLabel": "Streak",
+    "dayStreak": "day streak",
+    "wasteScore": "Waste score",
+    "cookTonightTitle": "Cook tonight",
+    "generateCTA": "Generate recipes →",
+    "generateCTASubtext": "No fresh recipes today",
+    "cookNowBtn": "Cook Now",
+    "recentlyCooked": "Recently cooked",
+    "noRecentSessions": "No cooking sessions yet. Start cooking to build your streak!",
+    "scanFridge": "Scan fridge"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -155,6 +175,12 @@
     "tabs": {
       "generate": "Generate",
       "saved": "Saved"
+    },
+    "rateLimitModal": {
+      "title": "Daily limit reached",
+      "description": "You've used all 10 free recipe generations today. Upgrade to Pro for unlimited AI recipes.",
+      "upgradeCTA": "Upgrade to Pro",
+      "dismiss": "Maybe later"
     }
   },
   "vision": {
@@ -208,5 +234,12 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "errors": {
+    "somethingWentWrong": "Something went wrong",
+    "tryAgain": "Try again",
+    "reportIssue": "Report issue",
+    "offline": "You're offline",
+    "offlineDescription": "Some features may be unavailable"
   }
 }
