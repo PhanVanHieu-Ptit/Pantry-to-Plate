@@ -8,8 +8,9 @@ import { PantryList } from '@/features/pantry/components/pantry-list';
 import { AddItemSheet } from '@/features/pantry/components/add-item-sheet';
 import { FridgeScanModal } from '@/features/vision/components/FridgeScanModal';
 import type { PantryItemWithComputedFields } from '@/features/pantry/types';
+import { withErrorBoundary } from '@/components/error-boundary';
 
-export default function PantryPage() {
+function PantryPage() {
   const t = useTranslations('pantry');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [scanOpen, setScanOpen] = useState(false);
@@ -62,3 +63,5 @@ export default function PantryPage() {
     </div>
   );
 }
+
+export default withErrorBoundary(PantryPage);

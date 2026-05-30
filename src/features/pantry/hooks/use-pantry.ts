@@ -1,6 +1,7 @@
 'use client';
 
 import { trpc } from '@/lib/trpc/client';
+import { track } from '@/lib/analytics';
 import type { PantryItemWithComputedFields, ExpiryStatus } from '../types';
 
 export function usePantryItems() {
@@ -34,6 +35,9 @@ export function useAddItem() {
 
       utils.pantry.getItems.setData(undefined, (old: PantryItemWithComputedFields[] | undefined) => (old ? [...old, optimistic] : [optimistic]));
       return { previous };
+    },
+    onSuccess: (_data, variables) => {
+      track('pantry_item_added', { category: variables.category });
     },
     onError: (_err, _vars, ctx) => {
       if (ctx?.previous) {

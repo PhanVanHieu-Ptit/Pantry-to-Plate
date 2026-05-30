@@ -16,6 +16,7 @@ import type { GeneratedRecipe } from '@/lib/ai/recipe-generator';
 import { RecipeGenerationPanel } from '@/features/recipes/components/RecipeGenerationPanel';
 import { RecipeCard } from '@/features/recipes/components/RecipeCard';
 import { RecipeDetailSheet } from '@/features/recipes/components/RecipeDetailSheet';
+import { withErrorBoundary } from '@/components/error-boundary';
 
 function savedRecipeToGeneratedShape(r: SavedRecipe): GeneratedRecipe {
   return {
@@ -116,7 +117,7 @@ function SavedRecipesGrid() {
   );
 }
 
-export default function RecipesPage() {
+function RecipesPage() {
   const t = useTranslations('recipes');
 
   return (
@@ -143,3 +144,5 @@ export default function RecipesPage() {
     </div>
   );
 }
+
+export default withErrorBoundary(RecipesPage);

@@ -1,7 +1,9 @@
 'use client';
 
+import { useRef } from 'react';
 import { Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -10,6 +12,10 @@ import { usePantryItems } from '../hooks/use-pantry';
 import { PantryItemCard } from './pantry-item-card';
 import { PANTRY_CATEGORIES } from '../pantry.schemas';
 import type { PantryItemWithComputedFields } from '../types';
+
+const VIRTUALIZE_THRESHOLD = 50;
+const GRID_COLS = 4;
+const ROW_HEIGHT = 136;
 
 interface PantryListProps {
   onAddItem: () => void;
@@ -32,6 +38,63 @@ function ItemGrid({ items, onEdit }: { items: PantryItemWithComputedFields[]; on
       {items.map((item) => (
         <PantryItemCard key={item.id} item={item} onEdit={onEdit} />
       ))}
+    </div>
+  );
+}
+
+function VirtualizedGrid({
+  items,
+  onEdit,
+}: {
+  items: PantryItemWithComputedFields[];
+  onEdit: (item: PantryItemWithComputedFields) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const rows: PantryItemWithComputedFields[][] = [];
+  for (let i = 0; i < items.length; i += GRID_COLS) {
+    rows.push(items.slice(i, i + GRID_COLS));
+  }
+
+  const virtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => containerRef.current,
+    estimateSize: () => ROW_HEIGHT,
+    overscan: 5,
+    gap: 12,
+  });
+
+  return (
+    <div
+      ref={containerRef}
+      className="overflow-auto"
+      style={{ height: Math.min(virtualizer.getTotalSize(), window.innerHeight * 0.7) }}
+    >
+      <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
+        {virtualizer.getVirtualItems().map((virtualRow) => {
+          const rowItems = rows[virtualRow.index]!;
+          return (
+            <div
+              key={virtualRow.key}
+              data-index={virtualRow.index}
+              ref={virtualizer.measureElement}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                transform: `translateY(${virtualRow.start}px)`,
+              }}
+            >
+              <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+                {rowItems.map((item) => (
+                  <PantryItemCard key={item.id} item={item} onEdit={onEdit} />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -61,6 +124,8 @@ export function PantryList({ onAddItem, onEdit }: PantryListProps) {
     {},
   );
 
+  const shouldVirtualize = filtered.length > VIRTUALIZE_THRESHOLD;
+
   return (
     <div className="space-y-6">
       {/* Search */}
@@ -88,25 +153,34 @@ export function PantryList({ onAddItem, onEdit }: PantryListProps) {
       )}
 
       {!isLoading && filtered.length > 0 && (
-        <div className="space-y-8">
-          {useToday.length > 0 && (
-            <section>
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-orange-600 dark:text-orange-400">
-                {t('useToday')}
-              </h2>
-              <ItemGrid items={useToday} onEdit={onEdit} />
-            </section>
-          )}
+        shouldVirtualize ? (
+          <div className="space-y-4">
+            <p className="text-xs text-muted-foreground">
+              Showing all {filtered.length} items
+            </p>
+            <VirtualizedGrid items={filtered} onEdit={onEdit} />
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {useToday.length > 0 && (
+              <section>
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-orange-600 dark:text-orange-400">
+                  {t('useToday')}
+                </h2>
+                <ItemGrid items={useToday} onEdit={onEdit} />
+              </section>
+            )}
 
-          {Object.entries(byCategory).map(([category, catItems]) => (
-            <section key={category}>
-              <h2 className="mb-3 text-sm font-medium text-muted-foreground capitalize">
-                {t(`categories.${category}` as Parameters<typeof t>[0])}
-              </h2>
-              <ItemGrid items={catItems} onEdit={onEdit} />
-            </section>
-          ))}
-        </div>
+            {Object.entries(byCategory).map(([category, catItems]) => (
+              <section key={category}>
+                <h2 className="mb-3 text-sm font-medium text-muted-foreground capitalize">
+                  {t(`categories.${category}` as Parameters<typeof t>[0])}
+                </h2>
+                <ItemGrid items={catItems} onEdit={onEdit} />
+              </section>
+            ))}
+          </div>
+        )
       )}
     </div>
   );

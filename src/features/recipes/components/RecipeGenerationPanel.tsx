@@ -18,6 +18,8 @@ import type { PantryItemWithComputedFields } from '@/features/pantry/types';
 import { useRecipeGeneration } from '../hooks/use-recipe-generation';
 import { RecipeCard } from './RecipeCard';
 import { RecipeDetailSheet } from './RecipeDetailSheet';
+import { RateLimitModal } from '@/components/rate-limit-modal';
+import { track } from '@/lib/analytics';
 
 function isRecipeComplete(recipe: DeepPartial<GeneratedRecipe>): boolean {
   return (
@@ -69,6 +71,7 @@ export function RecipeGenerationPanel() {
 
   const startSession = trpc.recipes.startCookingSession.useMutation({
     onSuccess: ({ sessionId }) => {
+      track('cooking_session_started');
       router.push(`/${locale}/cook/${sessionId}`);
     },
     onError: () => {
@@ -110,7 +113,7 @@ export function RecipeGenerationPanel() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPantry]);
 
-  const { generate, recipes, status, error, reset } = useRecipeGeneration();
+  const { generate, recipes, status, error, rateLimitReached, reset } = useRecipeGeneration();
 
   const effectiveSelectedNames = useCallback((): string[] => {
     if (useAll) return (pantryItems as PantryItemWithComputedFields[]).map((i) => i.name);
@@ -321,6 +324,11 @@ export function RecipeGenerationPanel() {
         onOpenChange={(open) => !open && setDetailRecipe(null)}
         isSaved={!!detailRecipe?.id && savedRecipeIds.has(detailRecipe.id)}
         onSave={detailRecipe ? () => handleSave(detailRecipe) : undefined}
+      />
+
+      <RateLimitModal
+        open={rateLimitReached}
+        onOpenChange={(open) => !open && reset()}
       />
     </div>
   );

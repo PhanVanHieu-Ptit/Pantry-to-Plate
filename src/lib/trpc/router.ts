@@ -2,6 +2,7 @@ import { createTRPCRouter, publicProcedure } from './server';
 import { pantryRouter } from '@/features/pantry/pantry.router';
 import { recipesRouter } from '@/features/recipes/router';
 import { authRouter } from '@/features/auth/auth.router';
+import { dashboardRouter } from '@/features/dashboard/dashboard.router';
 
 export const appRouter = createTRPCRouter({
   health: publicProcedure.query(() => ({
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   auth: authRouter,
   pantry: pantryRouter,
   recipes: recipesRouter,
+  dashboard: dashboardRouter,
 });
 
 export type AppRouter = typeof appRouter;

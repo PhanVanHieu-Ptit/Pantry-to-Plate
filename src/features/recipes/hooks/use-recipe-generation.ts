@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from 'react';
 import type { DeepPartial } from 'ai';
 import type { GeneratedRecipe } from '@/lib/ai/recipe-generator';
+import { track } from '@/lib/analytics';
 
 export type GenerationStatus = 'idle' | 'loading' | 'streaming' | 'complete' | 'error';
 
@@ -11,6 +12,7 @@ export interface UseRecipeGenerationReturn {
   recipes: DeepPartial<GeneratedRecipe>[];
   status: GenerationStatus;
   error: string | null;
+  rateLimitReached: boolean;
   reset: () => void;
 }
 
@@ -18,6 +20,7 @@ export function useRecipeGeneration(): UseRecipeGenerationReturn {
   const [status, setStatus] = useState<GenerationStatus>('idle');
   const [recipes, setRecipes] = useState<DeepPartial<GeneratedRecipe>[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [rateLimitReached, setRateLimitReached] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   const reset = useCallback(() => {
@@ -25,6 +28,7 @@ export function useRecipeGeneration(): UseRecipeGenerationReturn {
     setStatus('idle');
     setRecipes([]);
     setError(null);
+    setRateLimitReached(false);
   }, []);
 
   const generate = useCallback(
@@ -36,6 +40,7 @@ export function useRecipeGeneration(): UseRecipeGenerationReturn {
       setStatus('loading');
       setRecipes([]);
       setError(null);
+      setRateLimitReached(false);
 
       try {
         const response = await fetch('/api/ai/generate-recipes', {
@@ -48,7 +53,9 @@ export function useRecipeGeneration(): UseRecipeGenerationReturn {
         if (!response.ok) {
           const data = await response.json().catch(() => ({}));
           if (response.status === 429) {
-            throw new Error(data.error ?? 'Đã đạt giới hạn tạo công thức hôm nay (10 lần/ngày)');
+            setRateLimitReached(true);
+            setStatus('error');
+            return;
           }
           throw new Error(data.error ?? 'Không thể tạo công thức. Vui lòng thử lại.');
         }
@@ -71,7 +78,6 @@ export function useRecipeGeneration(): UseRecipeGenerationReturn {
 
           buffer += decoder.decode(value, { stream: true });
           const lines = buffer.split('\n');
-          // Keep the last potentially-incomplete line in the buffer
           buffer = lines.pop() ?? '';
 
           for (const line of lines) {
@@ -87,7 +93,6 @@ export function useRecipeGeneration(): UseRecipeGenerationReturn {
           }
         }
 
-        // Flush remaining buffer
         if (buffer.trim()) {
           try {
             const partial = JSON.parse(buffer) as { recipes?: DeepPartial<GeneratedRecipe>[] };
@@ -100,6 +105,7 @@ export function useRecipeGeneration(): UseRecipeGenerationReturn {
         }
 
         setStatus('complete');
+        track('recipe_generated');
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') return;
         setError(err instanceof Error ? err.message : 'Lỗi không xác định');
@@ -109,5 +115,5 @@ export function useRecipeGeneration(): UseRecipeGenerationReturn {
     [],
   );
 
-  return { generate, recipes, status, error, reset };
+  return { generate, recipes, status, error, rateLimitReached, reset };
 }
