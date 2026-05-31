@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useLang } from '../_context/lang';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const NAV_LINKS = {
   vi: [
@@ -39,7 +40,7 @@ export function MarketingNav() {
       className={cn(
         'sticky top-0 z-50 w-full transition-all duration-300',
         scrolled
-          ? 'bg-[#FAFAF7]/90 backdrop-blur-md shadow-sm'
+          ? 'bg-background/90 backdrop-blur-md shadow-sm'
           : 'bg-transparent',
       )}
     >
@@ -59,7 +60,7 @@ export function MarketingNav() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {l.label}
             </Link>
@@ -71,10 +72,12 @@ export function MarketingNav() {
           {/* Language toggle */}
           <button
             onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')}
-            className="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-zinc-200 hover:border-zinc-400 transition-colors text-zinc-600"
+            className="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-border hover:border-foreground/50 transition-colors text-muted-foreground"
           >
             {lang === 'vi' ? 'EN' : 'VI'}
           </button>
+
+          <ThemeToggle />
 
           <Button variant="ghost" size="sm" asChild>
             <Link href={`/${lang}/login`}>
@@ -97,33 +100,34 @@ export function MarketingNav() {
         <div className="flex md:hidden items-center gap-2">
           <button
             onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')}
-            className="text-xs font-semibold px-2 py-1 rounded border border-zinc-300 text-zinc-600"
+            className="text-xs font-semibold px-2 py-1 rounded border border-border text-muted-foreground"
           >
             {lang === 'vi' ? 'EN' : 'VI'}
           </button>
+          <ThemeToggle />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-64 bg-[#FAFAF7]">
+            <SheetContent side="right" className="w-64 bg-background">
               <div className="flex flex-col gap-6 pt-8">
                 {links.map((l) => (
                   <Link
                     key={l.href}
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="text-base text-zinc-700 hover:text-zinc-900 font-medium"
+                    className="text-base text-foreground/80 hover:text-foreground font-medium"
                   >
                     {l.label}
                   </Link>
                 ))}
-                <hr className="border-zinc-200" />
+                <hr className="border-border" />
                 <Link
                   href={`/${lang}/login`}
                   onClick={() => setOpen(false)}
-                  className="text-base text-zinc-600"
+                  className="text-base text-muted-foreground"
                 >
                   {lang === 'vi' ? 'Đăng nhập' : 'Sign in'}
                 </Link>

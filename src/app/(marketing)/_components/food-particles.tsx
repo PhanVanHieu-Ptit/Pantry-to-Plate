@@ -25,7 +25,7 @@ export function FoodParticles() {
             left: p.left,
             animationDelay: p.delay,
             animationDuration: p.duration,
-            opacity: 0.07,
+            opacity: 0.18,
           }}
         >
           {p.emoji}

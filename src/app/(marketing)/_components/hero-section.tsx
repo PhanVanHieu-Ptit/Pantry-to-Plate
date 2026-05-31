@@ -53,7 +53,7 @@ export function HeroSection() {
 
           <motion.h1
             variants={item}
-            className="font-lora text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.15] text-zinc-900"
+            className="font-lora text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.15] text-foreground"
           >
             {COPY.h1a[lang]}
             <br />
@@ -62,7 +62,7 @@ export function HeroSection() {
 
           <motion.p
             variants={item}
-            className="mt-6 text-lg text-zinc-500 max-w-md leading-relaxed"
+            className="mt-6 text-lg text-muted-foreground max-w-md leading-relaxed"
           >
             {COPY.sub[lang]}
           </motion.p>
@@ -78,7 +78,7 @@ export function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-xl h-12 px-7 text-base border-zinc-300 hover:border-zinc-400 gap-2"
+              className="rounded-xl h-12 px-7 text-base border-border text-foreground/70 hover:border-foreground/60 hover:text-foreground gap-2"
             >
               <Play className="h-4 w-4 fill-current" />
               {COPY.cta2[lang]}
@@ -87,7 +87,7 @@ export function HeroSection() {
 
           <motion.p
             variants={item}
-            className="mt-5 text-sm text-zinc-400"
+            className="mt-5 text-sm text-muted-foreground/70"
           >
             {COPY.social[lang]}
           </motion.p>
@@ -96,7 +96,7 @@ export function HeroSection() {
           <motion.div variants={item} className="mt-6 flex items-center gap-4">
             {['⭐ 4.9/5', '🔒 Miễn phí mãi mãi', '🇻🇳 Tiếng Việt'].map((b, i) => (
               lang === 'vi' ? (
-                <span key={i} className="text-xs text-zinc-400 bg-zinc-100 px-2.5 py-1 rounded-full">{b}</span>
+                <span key={i} className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full">{b}</span>
               ) : null
             ))}
             {lang === 'en' && ['⭐ 4.9/5', '🔒 Free forever', '🌏 Bilingual'].map((b, i) => (
@@ -112,7 +112,7 @@ export function HeroSection() {
       </div>
 
       {/* Gradient fade to next section */}
-      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-[#FAFAF7] to-transparent" />
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
 }

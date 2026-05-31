@@ -99,7 +99,7 @@ export function PricingSection() {
   const { lang } = useLang();
   const s = SECTION[lang];
   return (
-    <section id="pricing" className="py-20 lg:py-28 bg-white">
+    <section id="pricing" className="py-20 lg:py-28 bg-background">
       <div className="container">
         {/* Section header */}
         <motion.div
@@ -112,8 +112,8 @@ export function PricingSection() {
           <p className="text-brand-green font-semibold text-xs uppercase tracking-widest mb-3">
             {s.eyebrow}
           </p>
-          <h2 className="font-lora text-4xl font-bold text-zinc-900">{s.title}</h2>
-          <p className="mt-4 text-zinc-500 max-w-md mx-auto">{s.sub}</p>
+          <h2 className="font-lora text-4xl font-bold text-foreground">{s.title}</h2>
+          <p className="mt-4 text-muted-foreground max-w-md mx-auto">{s.sub}</p>
         </motion.div>
 
         <motion.div
@@ -130,7 +130,7 @@ export function PricingSection() {
                   'relative flex flex-col p-6 border-2 transition-all',
                   tier.popular
                     ? 'border-brand-green shadow-xl shadow-brand-green/10 md:scale-[1.04]'
-                    : 'border-zinc-200 shadow-sm',
+                    : 'border-border shadow-sm',
                 )}
               >
                 {tier.popular && (
@@ -143,14 +143,14 @@ export function PricingSection() {
 
                 {/* Header */}
                 <div className="mb-5">
-                  <p className="font-semibold text-zinc-900 text-base">{tier.name[lang]}</p>
-                  <p className="text-zinc-400 text-xs mt-0.5">{tier.desc[lang]}</p>
+                  <p className="font-semibold text-foreground text-base">{tier.name[lang]}</p>
+                  <p className="text-muted-foreground text-xs mt-0.5">{tier.desc[lang]}</p>
                 </div>
 
                 {/* Price */}
                 <div className="mb-6">
-                  <span className="font-lora text-4xl font-bold text-zinc-900">{tier.price}</span>
-                  <span className="text-zinc-400 text-sm ml-1">{tier.period[lang]}</span>
+                  <span className="font-lora text-4xl font-bold text-foreground">{tier.price}</span>
+                  <span className="text-muted-foreground text-sm ml-1">{tier.period[lang]}</span>
                 </div>
 
                 {/* CTA */}
@@ -159,7 +159,7 @@ export function PricingSection() {
                     'w-full rounded-xl mb-6',
                     tier.popular
                       ? 'bg-brand-green hover:bg-brand-green/90 text-white shadow-md shadow-brand-green/25'
-                      : 'bg-zinc-900 hover:bg-zinc-800 text-white',
+                      : 'bg-primary hover:bg-primary/90 text-primary-foreground',
                   )}
                   asChild
                 >
@@ -181,9 +181,9 @@ export function PricingSection() {
                       {f.included ? (
                         <CheckCircle className="w-4 h-4 text-brand-green mt-0.5 flex-shrink-0" />
                       ) : (
-                        <X className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
+                        <X className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                       )}
-                      <span className="text-zinc-600 leading-relaxed">{f.text[lang]}</span>
+                      <span className="text-foreground/70 leading-relaxed">{f.text[lang]}</span>
                     </li>
                   ))}
                 </ul>
@@ -193,7 +193,7 @@ export function PricingSection() {
         </motion.div>
 
         <motion.p
-          className="text-center text-zinc-400 text-sm mt-8"
+          className="text-center text-muted-foreground text-sm mt-8"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

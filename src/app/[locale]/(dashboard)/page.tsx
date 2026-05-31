@@ -257,7 +257,7 @@ function DashboardRecipeCard({
 
         <Button
           size="sm"
-          className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+          className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white"
           onClick={handleCook}
           disabled={startSession.isPending}
         >
@@ -371,7 +371,9 @@ function DashboardPage() {
       <section>
         <h2 className="text-lg font-semibold mb-3">{t('cookTonightTitle')}</h2>
         <div className="flex gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible snap-x snap-mandatory">
-          {data.needsRecipeGeneration && <GenerateCTACard locale={locale} />}
+          {data.needsRecipeGeneration && data.suggestedRecipes.length === 0 && (
+              <GenerateCTACard locale={locale} />
+            )}
           {data.suggestedRecipes.map((recipe: SavedRecipe, i: number) => (
             <DashboardRecipeCard
               key={recipe.id}
@@ -403,7 +405,7 @@ function DashboardPage() {
       {/* FAB — camera scan */}
       <button
         onClick={() => setScanOpen(true)}
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white shadow-lg flex items-center justify-center transition-all"
+        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-brand-orange hover:bg-brand-orange/90 active:scale-95 text-white shadow-lg flex items-center justify-center transition-all"
         aria-label={t('scanFridge')}
       >
         <Camera className="h-6 w-6" />

@@ -26,7 +26,7 @@ export function DashboardNav({
 
   const navItems = [
     {
-      href: `/${locale}/`,
+      href: `/${locale}`,
       label: t('home'),
       icon: Home,
       onHover: () => void utils.dashboard.getDashboardData.prefetch(),

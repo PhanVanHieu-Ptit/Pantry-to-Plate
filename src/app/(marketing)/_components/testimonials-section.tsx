@@ -74,7 +74,7 @@ export function TestimonialsSection() {
           <p className="text-brand-green font-semibold text-xs uppercase tracking-widest mb-3">
             {s.eyebrow}
           </p>
-          <h2 className="font-lora text-4xl font-bold text-zinc-900">{s.title}</h2>
+          <h2 className="font-lora text-4xl font-bold text-foreground">{s.title}</h2>
         </motion.div>
 
         <motion.div
@@ -86,32 +86,32 @@ export function TestimonialsSection() {
         >
           {TESTIMONIALS.map((t) => (
             <motion.div key={t.name.en} variants={cardVariant} className="h-full">
-              <Card className="p-6 border border-zinc-200 bg-white shadow-sm hover:shadow-md transition-shadow h-full flex flex-col gap-4">
+              <Card className="p-6 border border-border bg-card shadow-sm hover:shadow-md transition-shadow h-full flex flex-col gap-4">
                 {/* Stars */}
                 <div className="flex gap-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-4 h-4 ${i < t.stars ? 'fill-amber-400 text-amber-400' : 'text-zinc-200'}`}
+                      className={`w-4 h-4 ${i < t.stars ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/20'}`}
                     />
                   ))}
                 </div>
 
                 {/* Quote */}
-                <p className="text-zinc-600 text-sm leading-relaxed flex-1 italic">
+                <p className="text-card-foreground/80 text-sm leading-relaxed flex-1 italic">
                   {t.quote[lang]}
                 </p>
 
                 {/* Author */}
-                <div className="flex items-center gap-3 pt-2 border-t border-zinc-100">
+                <div className="flex items-center gap-3 pt-2 border-t border-border">
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 ${t.avatarColor}`}
                   >
                     {t.initials}
                   </div>
                   <div>
-                    <p className="font-semibold text-zinc-900 text-sm">{t.name[lang]}</p>
-                    <p className="text-zinc-400 text-xs">{t.role[lang]}</p>
+                    <p className="font-semibold text-card-foreground text-sm">{t.name[lang]}</p>
+                    <p className="text-muted-foreground text-xs">{t.role[lang]}</p>
                   </div>
                 </div>
               </Card>
