@@ -21,11 +21,11 @@ export function MarketingFooter() {
       ];
 
   return (
-    <footer className="border-t border-zinc-200 py-8 bg-[#FAFAF7]">
-      <div className="container flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-zinc-400">
+    <footer className="border-t border-border py-8 bg-background">
+      <div className="container flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
           <Leaf className="h-4 w-4 text-brand-green" />
-          <span className="font-semibold text-zinc-600">Pantry Pilot</span>
+          <span className="font-semibold text-foreground/70">Pantry Pilot</span>
         </div>
         <nav className="flex gap-6">
           {links.map((l) => (

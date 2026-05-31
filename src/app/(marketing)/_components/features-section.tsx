@@ -33,7 +33,7 @@ const FEATURES = [
     icon: Leaf,
     title:   { vi: 'Không lãng phí',             en: 'Zero Waste'               },
     body:    { vi: 'Theo dõi ngày hết hạn tự động. Pantry Pilot nhắc bạn nấu trước khi thức ăn hỏng.', en: 'Track expiry dates automatically. Pantry Pilot nudges you to cook before food goes bad.' },
-    iconBg:  'bg-amber-100',
+    iconBg:  'bg-amber-100 dark:bg-amber-900/20',
     iconFg:  'text-amber-600',
     border:  'hover:border-amber-300/50',
   },
@@ -65,8 +65,8 @@ export function FeaturesSection() {
           <p className="text-brand-green font-semibold text-xs uppercase tracking-widest mb-3">
             {s.eyebrow}
           </p>
-          <h2 className="font-lora text-4xl font-bold text-zinc-900">{s.title}</h2>
-          <p className="mt-4 text-zinc-500 max-w-lg mx-auto">{s.sub}</p>
+          <h2 className="font-lora text-4xl font-bold text-foreground">{s.title}</h2>
+          <p className="mt-4 text-muted-foreground max-w-lg mx-auto">{s.sub}</p>
         </motion.div>
 
         <motion.div
@@ -79,15 +79,15 @@ export function FeaturesSection() {
           {FEATURES.map((f) => (
             <motion.div key={f.title.en} variants={cardVariant}>
               <Card
-                className={`group p-7 border border-zinc-200 bg-white shadow-sm ${f.border} transition-all duration-300 hover:-translate-y-1 hover:shadow-md h-full`}
+                className={`group p-7 border border-border bg-card shadow-sm ${f.border} transition-all duration-300 hover:-translate-y-1 hover:shadow-md h-full`}
               >
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${f.iconBg}`}>
                   <f.icon className={`w-6 h-6 ${f.iconFg}`} />
                 </div>
-                <h3 className="font-lora font-semibold text-xl mb-3 text-zinc-900">
+                <h3 className="font-lora font-semibold text-xl mb-3 text-card-foreground">
                   {f.title[lang]}
                 </h3>
-                <p className="text-zinc-500 leading-relaxed text-sm">{f.body[lang]}</p>
+                <p className="text-muted-foreground leading-relaxed text-sm">{f.body[lang]}</p>
               </Card>
             </motion.div>
           ))}

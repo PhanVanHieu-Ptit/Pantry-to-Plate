@@ -44,7 +44,7 @@ export function HowItWorksSection() {
   const { lang } = useLang();
   const s = SECTION[lang];
   return (
-    <section id="how-it-works" className="py-20 lg:py-28 bg-white">
+    <section id="how-it-works" className="py-20 lg:py-28 bg-background">
       <div className="container">
         {/* Section header */}
         <motion.div
@@ -57,8 +57,8 @@ export function HowItWorksSection() {
           <p className="text-brand-green font-semibold text-xs uppercase tracking-widest mb-3">
             {s.eyebrow}
           </p>
-          <h2 className="font-lora text-4xl font-bold text-zinc-900">{s.title}</h2>
-          <p className="mt-4 text-zinc-500 max-w-lg mx-auto">{s.sub}</p>
+          <h2 className="font-lora text-4xl font-bold text-foreground">{s.title}</h2>
+          <p className="mt-4 text-muted-foreground max-w-lg mx-auto">{s.sub}</p>
         </motion.div>
 
         <motion.div
@@ -88,9 +88,9 @@ export function HowItWorksSection() {
               <div className="pt-1.5 pb-2">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">{step.emoji}</span>
-                  <h3 className="font-lora font-semibold text-xl text-zinc-900">{step.title[lang]}</h3>
+                  <h3 className="font-lora font-semibold text-xl text-foreground">{step.title[lang]}</h3>
                 </div>
-                <p className="text-zinc-500 leading-relaxed text-sm max-w-lg">{step.body[lang]}</p>
+                <p className="text-muted-foreground leading-relaxed text-sm max-w-lg">{step.body[lang]}</p>
               </div>
             </motion.div>
           ))}

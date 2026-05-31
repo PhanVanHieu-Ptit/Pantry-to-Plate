@@ -7,7 +7,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
   const [lang, setLang] = useState<Lang>('vi');
   return (
     <LangContext.Provider value={{ lang, setLang }}>
-      <div className="min-h-screen bg-[#FAFAF7] text-zinc-800 antialiased">{children}</div>
+      <div className="min-h-screen bg-background text-foreground antialiased">{children}</div>
     </LangContext.Provider>
   );
 }
